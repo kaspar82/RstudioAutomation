@@ -1,0 +1,132 @@
+http://www.aaronbell.com/lets-make-salt-minions-on-digitalocean/
+
+ 
+ curl -s http://169.254.169.254/latest/meta-data/public-hostname > ip.txt
+ aws s3 sync ip.txt s3://machinename
+
+ 
+ jenkins job:
+ aws cloudformation 
+ 
+ 
+ AKIAI5KM6USLPBYZBLJA
+ yuOENZr3uTVLr1gJRoICMFW6qYfoVyGVMOEfmfrs
+ 
+ 
+AKIAIYSFQZBEVIK4Z4OA
+QvPGiZeaaAZ6mPcPdKqqKN3WXVEDJa3rlAWXZZhE
+
+https://us-east-1.signin.aws.amazon.com/oauth?SignatureVersion=4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJMOATPLHVSJ563XQ&X-Amz-Date=2017-07-22T06%3A31%3A57.783Z&X-Amz-Signature=88d9878ecead551a05f9cffefcd99c7dd170617448624a6b9d44ce838c76b2be&X-Amz-SignedHeaders=host&client_id=arn%3Aaws%3Aiam%3A%3A015428540659%3Auser%2Fhomepage&redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2Fconsole%2Fhome%3Fstate%3DhashArgs%2523%26isauthcode%3Dtrue&response_type=code&state=hashArgs%23
+mastr:
+ curl -s http://169.254.169.254/latest/meta-data/public-ipv4 > saltmasterip.txt
+ echo $JOB_NAME >a
+ aws s3 sync ip.txt s3://machinename
+ sudo salt-key --accept-all
+ 
+ curl -s http://169.254.169.254/latest/meta-data/public-ipv4 > saltmasterip.txt
+aws s3 cp $WORKSPACE/saltmasterip.txt  s3://machinename/
+
+aws s3 cp s3://machinename/saltmasterip.txt /ec2/
+ 
+ 
+ ami:
+ install jenkins
+ install plugins
+ install git
+ install salt master 
+ install pip
+ install aws cli
+ edit master file for file_base.
+ create srv/salt
+ 
+ pip install awscli --upgrade --user
+	
+ jenkins job 
+ master:
+ sudo curl -s http://169.254.169.254/latest/meta-data/public-hostname > /usr/local/src/saltmasterip.txt
+ sudo aws s3 sync /usr/local/src/saltmasterip.txt s3://machinename
+ 
+ get top.sls from git
+ get rstudio.sls from gitpush files to srv/salt
+ minion:
+ cft with minion install 
+ master:
+ sudo salt-key --accept-all
+ run :
+ salt '*' state.highstate
+ salt-cp '*' index.html /var/www/html/
+ salt '*' cmd.run ""
+ salt '*' file.makedirs /var/www/html
+ 
+ 
+yum install -y R
+wget https://download2.rstudio.org/rstudio-server-rhel-0.99.465-x86_64.rpm
+yum install -y --nogpgcheck rstudio-server-rhel-0.99.465-x86_64.rpm
+
+/usr/local/src/install.sh:
+  file.managed:
+    - source: salt://installRStudio.sh
+    - user: root
+    - group: root
+    - mode: 644
+
+compile_and_install:
+  cmd.run:
+    - require:
+      - file: /usr/local/src/install.sh
+    - name : /usr/local/src/install.sh
+    - user: root
+    - group: root
+    - shell: /bin/bash
+	
+	
+	mycommand:
+  cmd.run:
+    - name: ls -l /
+	
+	
+installRStudio.sh:
+#!/bin/bash
+yum install -y R
+wget https://download2.rstudio.org/rstudio-server-rhel-0.99.465-x86_64.rpm
+yum install -y --nogpgcheck rstudio-server-rhel-0.99.465-x86_64.rpm
+useradd azuser
+echo azuser:azuser |  chpasswd
+
+
+sls:
+
+/usr/local/src/installRStudio.sh:
+  file.managed:
+    - source: salt://installRStudio.sh
+    - user: root
+    - group: root
+    - mode: 644
+
+compile_and_install:
+  cmd.run:
+    - require:
+      - file: /usr/local/src/installRStudio.sh
+    - name : sudo sh  /usr/local/src/installRStudio.sh
+    - user: root
+    - group: root
+    - shell: /bin/bash
+
+
+	
+	aws access key/pwd ~/.aws/configure need to be set /passed on from git and aws cloudformation command
+	should be run. This should also copies the file to new instance to spin up software instances too.
+	
+	carry forward the configuration .
+	
+ 
+ 
+ aws cloudformation create-stack --stack-name JStack --template-body file://C:\Users\077568\Desktop\RStudioAMI.json --parameters ParameterKey=KeyName,ParameterValue=rstudiokeypair --capabilities=CAPABILITY_IAM
+ 
+ 
+ 
+ 
+sudo salt-cp -E 'sal*'  install.sh /home/ec2-user/installRS.sh
+ sudo salt 'sal*' cmd.run 'sudo sh /home/ec2-user/installall.sh'
+ 
+ jenkins ALL = NOPASSWD: /bin/sh,/usr/bin/salt-key,/usr/bin/salt-cp,/usr/bin/salt-call

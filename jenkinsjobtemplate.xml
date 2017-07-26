@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.4.1">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/kaspar82/Script.git</url>
+        <credentialsId>4f025cea-ad9c-4979-8d0d-eac10ce46183</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+        <relativeTargetDir>scripts</relativeTargetDir>
+      </hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <com.syncapse.jenkinsci.plugins.awscloudformationwrapper.CloudFormationBuildStep plugin="jenkins-cloudformation-plugin@1.2">
+      <stacks>
+        <com.syncapse.jenkinsci.plugins.awscloudformationwrapper.PostBuildStackBean>
+          <stackName>${JOB_NAME}ServerStack${BUILD_NUMBER}</stackName>
+          <description></description>
+          <cloudFormationRecipe>https://s3.amazonaws.com/trialfor/MinionServer.json</cloudFormationRecipe>
+          <parameters>KeyName=rstudiokeypair,InstanceType=t2.small</parameters>
+          <timeout>0</timeout>
+          <awsAccessKey>AKIAIYSFQZBEVIK4Z4OA</awsAccessKey>
+          <awsSecretKey>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</awsSecretKey>
+          <sleep>0</sleep>
+          <awsRegion>US_East_Northern_Virginia</awsRegion>
+        </com.syncapse.jenkinsci.plugins.awscloudformationwrapper.PostBuildStackBean>
+      </stacks>
+    </com.syncapse.jenkinsci.plugins.awscloudformationwrapper.CloudFormationBuildStep>
+    </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
